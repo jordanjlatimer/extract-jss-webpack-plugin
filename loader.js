@@ -23,8 +23,8 @@ module.exports.pitch = function(request) {
 	// We already in child compiler, return empty bundle
 	if(this[NS] === undefined) {
 		throw new Error(
-			'"extract-text-webpack-plugin" loader is used without the corresponding plugin, ' +
-			'refer to https://github.com/webpack/extract-text-webpack-plugin for the usage example'
+			'"extract-jss-webpack-plugin" loader is used without the corresponding plugin, ' +
+			'refer to https://github.com/KijijiCA/extract-jss-webpack-plugin for the usage example'
 		);
 	} else if(this[NS] === false) {
 		return "";
@@ -36,18 +36,18 @@ module.exports.pitch = function(request) {
 		}
 		var resultSource;
 		if(query.remove) {
-			resultSource = "// removed by extract-text-webpack-plugin";
+			resultSource = "// removed by extract-jss-webpack-plugin";
 		} else {
 			resultSource = undefined;
 		}
 
-		var childFilename = "extract-text-webpack-plugin-output-filename"; // eslint-disable-line no-path-concat
+		var childFilename = "extract-jss-webpack-plugin-output-filename"; // eslint-disable-line no-path-concat
 		var publicPath = typeof query.publicPath === "string" ? query.publicPath : this._compilation.outputOptions.publicPath;
 		var outputOptions = {
 			filename: childFilename,
 			publicPath: publicPath
 		};
-		var childCompiler = this._compilation.createChildCompiler("extract-text-webpack-plugin", outputOptions);
+		var childCompiler = this._compilation.createChildCompiler("extract-jss-webpack-plugin", outputOptions);
 		childCompiler.apply(new NodeTemplatePlugin(outputOptions));
 		childCompiler.apply(new LibraryTemplatePlugin(null, "commonjs2"));
 		childCompiler.apply(new NodeTargetPlugin());

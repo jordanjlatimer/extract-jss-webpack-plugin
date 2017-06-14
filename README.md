@@ -12,17 +12,17 @@
     <img width="200" height="200"
       src="https://webpack.js.org/assets/icon-square-big.svg">
   </a>
-  <h1>Extract Text Plugin</h1>
-  <p>Extract text from a bundle, or bundles, into a separate file.</p>
+  <h1>Extract JSS Plugin</h1>
+  <p>Extract JSS from a bundle, or bundles, into a separate file.</p>
 </div>
 
 <h2 align="center">Install</h2>
 
 ```bash
 # for webpack 2
-npm install --save-dev extract-text-webpack-plugin
+npm install --save-dev extract-jss-webpack-plugin
 # for webpack 1
-npm install --save-dev extract-text-webpack-plugin@1.0.1
+npm install --save-dev extract-jss-webpack-plugin@1.0.1
 ```
 
 <h2 align="center">Usage</h2>
@@ -30,14 +30,14 @@ npm install --save-dev extract-text-webpack-plugin@1.0.1
 > :warning: For webpack v1, see [the README in the webpack-1 branch](https://github.com/webpack/extract-text-webpack-plugin/blob/webpack-1/README.md).
 
 ```js
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractJssPlugin = require("extract-jss-webpack-plugin");
 
 module.exports = {
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
+        use: ExtractJssPlugin.extract({
           fallback: "style-loader",
           use: "css-loader"
         })
@@ -45,7 +45,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin("styles.css"),
+    new ExtractJssPlugin("styles.css"),
   ]
 }
 ```
@@ -55,7 +55,7 @@ It moves all the required `*.css` modules in entry chunks into a separate CSS fi
 |Advantages|Caveats|
 |:---------|:------|
 | Fewer style tags (older IE has a limit) | Additional HTTP request |
-| CSS SourceMap (with `devtool: "source-map"` and `extract-text-webpack-plugin?sourceMap`) | Longer compilation time |
+| CSS SourceMap (with `devtool: "source-map"` and `extract-jss-webpack-plugin?sourceMap`) | Longer compilation time |
 | CSS requested in parallel | No runtime public path modification |
 | CSS cached separate | No Hot Module Replacement |
 | Faster runtime (less code and DOM operations) | ... |
@@ -63,14 +63,14 @@ It moves all the required `*.css` modules in entry chunks into a separate CSS fi
 <h2 align="center">Options</h2>
 
 ```js
-new ExtractTextPlugin(options: filename | object)
+new ExtractJssPlugin(options: filename | object)
 ```
 
 |Name|Type|Description|
 |:--:|:--:|:----------|
 |**`id`**|`{String}`|Unique ident for this plugin instance. (For advanced usage only, by default automatically generated)|
 |**`filename`**|`{String\|Function}`|Name of the result file. May contain `[name]`, `[id]` and `[contenthash]`|
-|**`allChunks`**|`{Boolean}`|Extract from all additional chunks too (by default it extracts only from the initial chunk(s))<br />When using `CommonsChunkPlugin` and there are extracted chunks (from `ExtractTextPlugin.extract`) in the commons chunk, `allChunks` **must** be set to `true`|
+|**`allChunks`**|`{Boolean}`|Extract from all additional chunks too (by default it extracts only from the initial chunk(s))<br />When using `CommonsChunkPlugin` and there are extracted chunks (from `ExtractJssPlugin.extract`) in the commons chunk, `allChunks` **must** be set to `true`|
 |**`disable`**|`{Boolean}`|Disables the plugin|
 |**`ignoreOrder`**|`{Boolean}`|Disables order check (useful for CSS Modules!), `false` by default|
 
@@ -78,12 +78,12 @@ new ExtractTextPlugin(options: filename | object)
 * `[id]` number of the chunk
 * `[contenthash]` hash of the content of the extracted file
 
-> :warning: `ExtractTextPlugin` generates a file **per entry**, so you must use `[name]`, `[id]` or `[contenthash]` when using multiple entries.
+> :warning: `ExtractJssPlugin` generates a file **per entry**, so you must use `[name]`, `[id]` or `[contenthash]` when using multiple entries.
 
 #### `#extract`
 
 ```js
-ExtractTextPlugin.extract(options: loader | object)
+ExtractJssPlugin.extract(options: loader | object)
 ```
 
 Creates an extracting loader from an existing loader. Supports loaders of type `{ loader: [name]-loader -> {String}, options: {} -> {Object} }`.
@@ -97,14 +97,14 @@ Creates an extracting loader from an existing loader. Supports loaders of type `
 
 #### Multiple Instances
 
-There is also an `extract` function on the instance. You should use this if you have more than one instance of  `ExtractTextPlugin`.
+There is also an `extract` function on the instance. You should use this if you have more than one instance of  `ExtractJssPlugin`.
 
 ```js
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractJssPlugin = require('extract-jss-webpack-plugin');
 
 // Create multiple instances
-const extractCSS = new ExtractTextPlugin('stylesheets/[name]-one.css');
-const extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
+const extractCSS = new ExtractJssPlugin('stylesheets/[name]-one.css');
+const extractLESS = new ExtractJssPlugin('stylesheets/[name]-two.css');
 
 module.exports = {
   module: {
@@ -131,14 +131,14 @@ module.exports = {
 The configuration is the same, switch out `sass-loader` for `less-loader` when necessary.
 
 ```js
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractJssPlugin = require('extract-jss-webpack-plugin');
 
 module.exports = {
   module: {
     rules: [
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
+        use: ExtractJssPlugin.extract({
           fallback: 'style-loader',
           //resolve-url-loader may be chained before sass-loader if necessary
           use: ['css-loader', 'sass-loader']
@@ -147,9 +147,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('style.css')
+    new ExtractJssPlugin('style.css')
     //if you want to pass in options, you can do so:
-    //new ExtractTextPlugin({
+    //new ExtractJssPlugin({
     //  filename: 'style.css'
     //})
   ]
@@ -166,7 +166,7 @@ entry: {
   'js/a': "./a"
 },
 plugins: [
-  new ExtractTextPlugin({
+  new ExtractJssPlugin({
     filename:  (getPath) => {
       return getPath('css/[name].css').replace('css/js', 'css');
     },
