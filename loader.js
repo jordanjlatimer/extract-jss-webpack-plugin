@@ -107,9 +107,8 @@ module.exports.pitch = function(request) {
 				return callback(new Error("Didn't get a result from child compiler"));
 			}
 			try {
-				var text = this.exec(source, request);
-				if(typeof text === "string")
-					text = [[0, text]];
+				var jss = this.exec(source, request);
+				var text = [[0, jss.__compiledStyles + '\n']];
 				text.forEach(function(item) {
 					var id = item[0];
 					compilation.modules.forEach(function(module) {
@@ -118,9 +117,8 @@ module.exports.pitch = function(request) {
 					});
 				});
 				this[NS](text, query);
-				if(text.locals && typeof resultSource !== "undefined") {
-					resultSource += "\nmodule.exports = " + JSON.stringify(text.locals) + ";";
-				}
+				delete jss.__compiledStyles;
+				resultSource = "module.exports = " + JSON.stringify(jss) + ";";
 			} catch(e) {
 				return callback(e);
 			}
